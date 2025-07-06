@@ -15,7 +15,7 @@ pipeline {
         }
 
         stage('Static Test') {
-            agent { label 'bandit-flake8' }
+            agent { label 'linux-agent1' }
             steps {
                 echo 'Ejecutando análisis estático con Flake8 y Bandit'
                 sh '''
@@ -40,7 +40,7 @@ pipeline {
         }
 
         stage('Rest Test') {
-            agent { label 'pytest-curl' }
+            agent { label 'linux-agent1' }
             steps {
                 echo 'Ejecutando pruebas de integración'
                 script {
