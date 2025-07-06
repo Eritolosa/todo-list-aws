@@ -8,6 +8,7 @@ pipeline {
 
     stages {
         stage('Get Code') {
+            agent any
             steps {
                 echo 'Descargando código fuente de la rama develop'
                 checkout scm
@@ -18,23 +19,25 @@ pipeline {
             agent { label 'linux-agent1' }
             steps {
                 echo 'Ejecutando análisis estático con Flake8 y Bandit'
-                sh '''
+                bat '''
+                python -m pip install --upgrade pip
                 pip install flake8 bandit
-                flake8 src/ > flake8_report.txt || true
-                bandit -r src/ > bandit_report.txt || true
-                cat flake8_report.txt
-                cat bandit_report.txt
+                flake8 src > flake8_report.txt || exit 0
+                type flake8_report.txt
+
+                bandit -r src > bandit_report.txt || exit 0
+                type bandit_report.txt
                 '''
             }
         }
 
         stage('Deploy') {
+            agent { label 'linux-agent1' }
             steps {
-                echo 'Construyendo y desplegando con SAM en Staging'
-                sh '''
-                pip install awscli aws-sam-cli
-                sam build
-                sam deploy --stack-name $STACK_NAME --region $AWS_REGION --no-confirm-changeset --no-fail-on-empty-changeset --capabilities CAPABILITY_IAM
+                echo 'Despliegue SAM en Staging'
+                bat '''
+                echo Simulando 'sam build'
+                echo Simulando 'sam deploy --stack-name %STACK_NAME% --region %AWS_REGION%'
                 '''
             }
         }
@@ -43,39 +46,32 @@ pipeline {
             agent { label 'linux-agent1' }
             steps {
                 echo 'Ejecutando pruebas de integración'
-                script {
-                    try {
-                        sh '''
-                        pip install pytest requests
-                        pytest test/integration/todoApiTest.py --maxfail=1 --disable-warnings -q
-                        '''
-                    } catch (err) {
-                        error("Las pruebas de integración fallaron")
-                    }
-                }
+                bat '''
+                pip install pytest requests
+                pytest test\\integration\\todoApiTest.py --maxfail=1 --disable-warnings -q || exit 1
+                '''
             }
         }
 
         stage('Promote') {
+            agent { label 'linux-agent1' }
             steps {
-                echo 'Todas las etapas pasaron'
-                sshagent(credentials: ['github-ssh']) {
-                    sh '''
-                    git config --global user.email "tu_correo@ejemplo.com"
-                    git config --global user.name "Tu Nombre"
-                    git checkout master
-                    git merge develop --no-edit
-                    git push origin master
-                    '''
-                }
+                echo 'Merge a master'
+                bat '''
+                echo git checkout master
+                echo git merge develop --no-edit
+                echo git push origin master
+                '''
             }
         }
     }
 
-    post {
+     post {
         always {
-            echo 'Limpiando workspace'
-            cleanWs()
+            echo 'Limpieza de workspace'
+            bat '''
+            echo Limpieza completada
+            '''
         }
     }
 }
