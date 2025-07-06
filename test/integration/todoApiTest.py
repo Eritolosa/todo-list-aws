@@ -29,7 +29,7 @@ class TestApi(unittest.TestCase):
         response = requests.post(url, data=json.dumps(data))
         json_response = response.json()
         print('Response Add Todo: '+ str(json_response))
-        jsonbody= json.loads(json_response['body'])
+        jsonbody = json_response
         ID_TODO = jsonbody['id']
         print ('ID todo:'+ID_TODO)
         self.assertEqual(
@@ -57,8 +57,8 @@ class TestApi(unittest.TestCase):
         }
         response = requests.post(url, data=json.dumps(data))
         json_response = response.json()
-        print('Response Add Todo: '+ json_response['body'])
-        jsonbody= json.loads(json_response['body'])
+        print('Response Add Todo: '+ str(json_response))
+        jsonbody = json_response
         ID_TODO = jsonbody['id']
         print ('ID todo:'+ID_TODO)
         self.assertEqual(
@@ -84,7 +84,7 @@ class TestApi(unittest.TestCase):
         response = requests.post(url, data=json.dumps(data))
         json_response = response.json()
         print('Response Add Todo: '+ str(json_response))
-        jsonbody= json.loads(json_response['body'])
+        jsonbody = json_response
         ID_TODO = jsonbody['id']
         print ('ID todo:'+ID_TODO)
         self.assertEqual(
@@ -121,8 +121,8 @@ class TestApi(unittest.TestCase):
         }
         response = requests.post(url, data=json.dumps(data))
         json_response = response.json()
-        print('Response Add todo: ' + json_response['body'])
-        jsonbody= json.loads(json_response['body'])
+        print('Response Add Todo: '+ str(json_response))
+        jsonbody = json_response
         ID_TODO = jsonbody['id']
         print ('ID todo:'+ID_TODO)
         self.assertEqual(
@@ -140,7 +140,7 @@ class TestApi(unittest.TestCase):
         response = requests.put(url, data=json.dumps(data))
         json_response = response.json()
         print('Response Update todo: ' + str(json_response))
-        #jsonbody= json.loads(json_response['body'])
+        jsonbody = json_response
         self.assertEqual(
             response.status_code, 200, "Error en la petición API a {url}"
         )
@@ -174,8 +174,8 @@ class TestApi(unittest.TestCase):
         }
         response = requests.post(url, data=json.dumps(data))
         json_response = response.json()
-        print('Response Add todo: ' + json_response['body'])
-        jsonbody= json.loads(json_response['body'])
+        print('Response Add Todo: '+ str(json_response))
+        jsonbody = json_response
         ID_TODO = jsonbody['id']
         print ('ID todo:'+ID_TODO)
         self.assertEqual(
