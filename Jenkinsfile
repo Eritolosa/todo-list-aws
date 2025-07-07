@@ -45,11 +45,7 @@ pipeline {
         stage('Rest Test') {
             agent { label 'linux-agent1' }
             steps {
-                echo 'Ejecutando pruebas de integración'
-                bat '''
-                pip install pytest requests
-                pytest test\\integration\\todoApiTest.py --maxfail=1 --disable-warnings -q || exit 1
-                '''
+                bat 'test_curl.bat'
             }
         }
 
