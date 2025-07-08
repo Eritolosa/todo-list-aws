@@ -12,8 +12,17 @@ pipeline {
             steps {
                 echo 'Descargando código fuente de la rama develop'
                 checkout scm
+           
+        script {
+            if (env.BRANCH_NAME == 'develop') {
+            bat 'git clone --branch staging https://github.com/Eritolosa/todo-list-aws-config.git config-repo'
+                } else if (env.BRANCH_NAME == 'master') {
+            bat 'git clone --branch production https://github.com/Eritolosa/todo-list-aws-config.git config-repo'
+            }
+            bat 'copy config-repo\\samconfig.toml samconfig.toml /Y'
             }
         }
+    }
 
         stage('Static Test') {
             agent { label 'linux-agent1' }
